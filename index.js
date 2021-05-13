@@ -1,9 +1,25 @@
+/*RESTFUL Routes
+
+CRUD - Create Read Update Delete
+
+Index    /campgrounds             GET     Display all campgrounds
+New      /campgrounds/new         GET     Form to create a new campground   
+Create   /campgrounds             POST    Creates a new campground
+Show     /campgrounds/:id         GET     Shows details for an specific campground
+Edit     /campgrounds/:id/edit    GET     Shows Form to edit specific campground
+Update   /campgrounds/:id         PATCH   Updates specific campground
+Destroy  /campgrounds/:id         DELETE  Deletes Specific campground
+
+
+*/
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const path = require("path");
-const Campground = require("./models/campground");
+const Campground = require("./models/campground"); //Model for my database
+const { findByIdAndDelete } = require("./models/campground");
 
 app.use(express.urlencoded({ extended: true })); //parse html form data
 app.use(express.json());
@@ -25,26 +41,65 @@ mongoose.connect("mongodb://localhost:27017/wecamp", { useNewUrlParser: true, us
     });
 
 
+//Start Server    
 app.listen(3000, () => {
     console.log("Server started on port 3000")
 });
 
-
+//Home route
 app.get("/", async (req, res) => {
     const camps = await Campground.find({});
     res.render("home", { camps });
 });
 
-/* app.get("/createCamp", async (req, res) => {
-    const camp = new Campground({
-        title: "Mazamitla",
-        location: "Jalisco",
-        price: 43,
-        description: "Beautiful woods and amazing weather make for the perfect campsite"
-    });
-    await camp.save();
-    res.send(camp);
-}); */
+
+//index route
+app.get("/campgrounds", async (req, res) => {
+    const camps = await Campground.find({});
+    res.render("campgrounds/index", { camps });
+});
+
+//New Route
+app.get("/campgrounds/new", (req, res) => {
+    res.render("campgrounds/new");
+});
+
+//Create Route
+app.post("/campgrounds", async (req, res) => {
+    const camp = req.body;
+    const newCamp = new Campground(camp);
+    await newCamp.save()
+    res.redirect(`/campgrounds/${newCamp._id}`);
+});
+
+//Show route
+app.get("/campgrounds/:id", async (req, res) => {
+    const { id } = req.params;
+    const camp = await Campground.findById(id);
+    res.render("campgrounds/show", { camp });
+});
+
+//Edit Route
+app.get("/campgrounds/:id/edit", async (req, res) => {
+    const { id } = req.params;
+    const camp = await Campground.findById(id);
+    res.render("campgrounds/edit", { camp })
+});
+
+//Update Route
+app.put("/campgrounds/:id", async (req, res) => {
+    const { id } = req.params;
+    const camp = req.body;
+    await Campground.findByIdAndUpdate(id, camp, { runValidators: true });
+    res.redirect(`/campgrounds/${id}`);
+});
+
+//Delete Route
+app.delete("/campgrounds/:id", async (req, res) => {
+    const { id } = req.params;
+    await Campground.findByIdAndDelete(id);
+    res.redirect("/campgrounds");
+})
 
 
 
