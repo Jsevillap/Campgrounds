@@ -20,7 +20,16 @@ const methodOverride = require("method-override");
 const path = require("path");
 const Campground = require("./models/campground"); //Model for my database
 const { findByIdAndDelete } = require("./models/campground");
+const ejsMate = require("ejs-mate"); // Using ejs-mate for partials main boilerplate 
 
+
+/* HOW TO USE INCLUDES WITH EJS =
+
+<%-includes("../partials/element")  %>
+
+*/
+
+app.engine("ejs", ejsMate);
 app.use(express.urlencoded({ extended: true })); //parse html form data
 app.use(express.json());
 app.set("views", path.join(__dirname, "views"));
@@ -55,6 +64,7 @@ app.get("/", async (req, res) => {
 
 //index route
 app.get("/campgrounds", async (req, res) => {
+    res.locals.title = "WeCamp - Campgrounds";
     const camps = await Campground.find({});
     res.render("campgrounds/index", { camps });
 });
@@ -66,6 +76,7 @@ app.get("/campgrounds/new", (req, res) => {
 
 //Create Route
 app.post("/campgrounds", async (req, res) => {
+    res.locals.title = "Create a new camp";
     const camp = req.body;
     const newCamp = new Campground(camp);
     await newCamp.save()
@@ -76,6 +87,7 @@ app.post("/campgrounds", async (req, res) => {
 app.get("/campgrounds/:id", async (req, res) => {
     const { id } = req.params;
     const camp = await Campground.findById(id);
+    res.locals.title = camp.title;
     res.render("campgrounds/show", { camp });
 });
 
@@ -83,6 +95,7 @@ app.get("/campgrounds/:id", async (req, res) => {
 app.get("/campgrounds/:id/edit", async (req, res) => {
     const { id } = req.params;
     const camp = await Campground.findById(id);
+    res.locals.title = `Edit ${camp.title}`; // Define the title of the page based on data from the page
     res.render("campgrounds/edit", { camp })
 });
 

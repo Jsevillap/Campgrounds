@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+<% layout("layouts/boilerplate") %>
+    <!--include the ejs-mate partial layout using the keyword layout instead of includes-->
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>We Camp</title>
-</head>
-
-<body>
     <h1>Welcome to We camp</h1>
     <ul>
         <% for(let camp of camps){%>
@@ -20,6 +12,3 @@
             </a>
             <% } %>
     </ul>
-</body>
-
-</html>
