@@ -25,7 +25,7 @@ const ejsMate = require("ejs-mate"); // Using ejs-mate for partials main boilerp
 
 /* HOW TO USE INCLUDES WITH EJS =
 
-<%-includes("../partials/element")  %>
+<%-include("../partials/element")  %>
 
 */
 
@@ -69,12 +69,13 @@ app.get("/campgrounds", async (req, res) => {
     res.render("campgrounds/index", { camps });
 });
 
-//New Route
+//New Route show form to create new camp
 app.get("/campgrounds/new", (req, res) => {
+    res.locals.title = "Create a New Campground";
     res.render("campgrounds/new");
 });
 
-//Create Route
+//Create Route 
 app.post("/campgrounds", async (req, res) => {
     res.locals.title = "Create a new camp";
     const camp = req.body;

@@ -23,7 +23,8 @@ const seedDB = async () => {
             location: `${cities[randomNum].city}, ${cities[randomNum].state}`,
             title: ` ${descriptors[Math.floor(Math.random() * descriptors.length)]} ${places[Math.floor(Math.random() * places.length)]} `,
             price: Math.floor(Math.random() * 85),
-            description: `The Best campsite in ${cities[randomNum].city}, ${cities[randomNum].state}.`
+            description: `The Best campsite in ${cities[randomNum].city}, ${cities[randomNum].state}.`,
+            image: "https://source.unsplash.com/collection/483251/1600x900"
         })
         await camp.save();
     }

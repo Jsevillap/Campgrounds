@@ -1,18 +1,39 @@
 <% layout("layouts/boilerplate") %>
-    <h1>Create a new campground</h1>
-    <section>
+    <h1 class="text-center">Create a new campground</h1>
+    <section class="col-6 offset-3 mt-4">
         <form action="/campgrounds" method="POST">
-            <label for="title">Title</label>
-            <input type="text" name="title" id="title" placeholder="Title">
-            <br>
-            <label for="location">Location</label>
-            <input type="text" name="location" placeholder="location" id="location">
-            <br>
-            <label for="price">Price</label>
-            <input type="number" name="price" id="price">
-            <br>
-            <label for="description">Description</label>
-            <textarea name="description" id="description" cols="30" rows="10"></textarea>
-            <button type="submit">Save Camp</button>
+
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" name="title" id="title" class="form-control" placeholder="Title">
+            </div>
+
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" name="location" placeholder="location" id="location" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input type="number" name="price" id="price" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="image" class="form-label">Image URL</label>
+                <input type="text" name="image" placeholder="example: https://image.com/image" id="image"
+                    class="form-control">
+            </div>
+
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="description" id="description" cols="30" rows="10" class="form-control"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <button class="btn btn-primary" type="submit">Create Camp</button>
+            </div>
+
+
         </form>
     </section>

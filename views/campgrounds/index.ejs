@@ -1,14 +1,34 @@
 <% layout("layouts/boilerplate") %>
     <!--include the ejs-mate partial layout using the keyword layout instead of includes-->
 
-    <h1>Welcome to We camp</h1>
-    <ul>
-        <% for(let camp of camps){%>
-            <a href="/campgrounds/<%=camp._id%>">
-                <li>
-                    <%= `${camp.title}: located in ${camp.location}: Price $${camp.price}:
-                        Description:${camp.description}`%>
-                </li>
-            </a>
-            <% } %>
-    </ul>
+    <h1 class="mb-4">WeCamp - Campgrounds</h1>
+    <% for(let camp of camps){%>
+
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="<%=camp.image%>" class="img-fluid">
+                </div>
+                <div class="col-md-8 d-flex">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= camp.title %>
+                        </h5>
+                        <p class="card-text">
+                            <%= camp.description %>
+                        </p>
+                        <h6 class="card-text">
+                            $<%= camp.price %> / Per Night
+                        </h6>
+                        <p class="card-text"><small class="text-muted">
+                                <i class="bi bi-geo-alt"></i>
+                                <%= camp.location %>
+                            </small></p>
+                        <a href="/campgrounds/<%=camp._id%>" class="btn btn-primary">Check Camp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <% } %>

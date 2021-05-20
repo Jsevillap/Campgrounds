@@ -1,21 +1,32 @@
 <% layout("layouts/boilerplate") %>
-    <h1>
-        <%=camp.title%>
-    </h1>
-    <h4>
-        <%=camp.location%>
-    </h4>
-    <p>
-        Price: $<%= camp.price%>
-    </p>
-    <p>
-        <%= camp.description %>
-    </p>
 
-    <a href="/campgrounds/">Back to Campgrounds</a>
-    <br>
-    <a href="/campgrounds/<%=camp._id%>/edit">Edit Campground</a>
-    <br>
-    <form action="/campgrounds/<%=camp._id%>?_method=DELETE" method="POST">
-        <button type="submit">Delete Camp</button>
-    </form>
+    <div class="row d-flex justify-content-center">
+        <div class="col-10">
+            <div class="card my-5">
+                <img src="<%= camp.image %>" class="card-img-top img-fluid" alt="...">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <%=camp.title%>
+                    </h3>
+                    <p class="card-text">
+                        <%= camp.description %>
+                    </p>
+                    <p class="text-muted">
+                        <i class="bi bi-geo-alt"></i>
+                        <%=camp.location%>
+                    </p>
+                    <p class="card-text">Price: $<%= camp.price%>/night</p>
+
+
+
+                    <a class="btn btn-primary" href="/campgrounds/<%=camp._id%>/edit">Edit</a>
+
+                    <form action="/campgrounds/<%=camp._id%>?_method=DELETE" method="POST" class="d-inline-block">
+                        <button class="btn btn-danger mt-4 mb-4" type="submit">Delete</button>
+                    </form>
+                    <a class="d-block" href="/campgrounds/">Back to Campgrounds</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
