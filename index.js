@@ -16,12 +16,15 @@ Destroy  /campgrounds/:id         DELETE  Deletes Specific campground
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const methodOverride = require("method-override");
+const methodOverride = require("method-override"); //we need this to be able to use other html verbs on our forms outside of get and post
 const path = require("path");
-const Campground = require("./models/campground"); //Model for my database
+const Campground = require("./models/campground"); // require the campground Model for my database
 const { findByIdAndDelete } = require("./models/campground");
-const ejsMate = require("ejs-mate"); // Using ejs-mate for partials main boilerplate 
-
+const ejsMate = require("ejs-mate"); // Using ejs-mate for partials main boilerplate layout folder 
+const catchAsync = require("./utils/catchAsync"); // import our catchAsync function
+const ExpressError = require("./utils/ExpressError");//import express Error class
+const { campgroundSchema } = require("./schemas.js")
+// catchAsync() function should wrap our async functions to catch errors
 
 /* HOW TO USE INCLUDES WITH EJS =
 
@@ -29,14 +32,27 @@ const ejsMate = require("ejs-mate"); // Using ejs-mate for partials main boilerp
 
 */
 
-app.engine("ejs", ejsMate);
+app.engine("ejs", ejsMate); // use ejsMate
 app.use(express.urlencoded({ extended: true })); //parse html form data
-app.use(express.json());
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
-app.use(methodOverride("_method"));
+app.use(express.json()); //parse JSON
+app.set("views", path.join(__dirname, "views")); //Tell express where my viewe folder is
+app.set("view engine", "ejs"); //Tell express to set ejs as the viewengine
+app.use(methodOverride("_method"));//Tell express to use method override
 
-mongoose.set('useFindAndModify', false);
+///Validate middleware using Joi
+const validateCampground = (req, res, next) => {
+
+    const { error } = campgroundSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(",");
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}
+
+//---------------------------------------//
+mongoose.set('useFindAndModify', false); //Tell mongoose to not use that function cause is deprecated
 
 //Connect mongoose to mongo database
 mongoose.connect("mongodb://localhost:27017/wecamp", { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
@@ -76,44 +92,57 @@ app.get("/campgrounds/new", (req, res) => {
 });
 
 //Create Route 
-app.post("/campgrounds", async (req, res) => {
-    res.locals.title = "Create a new camp";
-    const camp = req.body;
+app.post("/campgrounds", validateCampground, catchAsync(async (req, res, next) => {
+    const { campground: camp } = req.body;
     const newCamp = new Campground(camp);
     await newCamp.save()
     res.redirect(`/campgrounds/${newCamp._id}`);
-});
+}));
 
 //Show route
-app.get("/campgrounds/:id", async (req, res) => {
+app.get("/campgrounds/:id", catchAsync(async (req, res) => {
     const { id } = req.params;
     const camp = await Campground.findById(id);
     res.locals.title = camp.title;
     res.render("campgrounds/show", { camp });
-});
+}));
 
 //Edit Route
-app.get("/campgrounds/:id/edit", async (req, res) => {
+app.get("/campgrounds/:id/edit", catchAsync(async (req, res) => {
     const { id } = req.params;
     const camp = await Campground.findById(id);
     res.locals.title = `Edit ${camp.title}`; // Define the title of the page based on data from the page
     res.render("campgrounds/edit", { camp })
-});
+}));
 
 //Update Route
-app.put("/campgrounds/:id", async (req, res) => {
+app.put("/campgrounds/:id", validateCampground, catchAsync(async (req, res, next) => {
+
     const { id } = req.params;
-    const camp = req.body;
+    const { campground: camp } = req.body;
     await Campground.findByIdAndUpdate(id, camp, { runValidators: true });
     res.redirect(`/campgrounds/${id}`);
-});
+
+}));
 
 //Delete Route
-app.delete("/campgrounds/:id", async (req, res) => {
+app.delete("/campgrounds/:id", catchAsync(async (req, res, next) => {
+
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     res.redirect("/campgrounds");
+
+}))
+
+//404
+app.all("*", (req, res, next) => {
+    next(new ExpressError("404 Page not found", 404));
 })
 
-
+//error handler
+app.use((err, req, res, next) => {
+    const { statusCode = 500, message = "Internal Server Error" } = err;
+    res.locals.title = message;
+    res.status(statusCode).render("error", { statusCode, message, err });
+})
 

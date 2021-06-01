@@ -1,3 +1,5 @@
+//This file is created to fill in the database with dummy information for testing purposes
+
 const mongoose = require("mongoose");
 const Campground = require("../models/campground");
 const cities = require("./cities");
@@ -13,6 +15,7 @@ mongoose.connect("mongodb://localhost:27017/wecamp", { useNewUrlParser: true, us
         console.log("There is an error on mongo")
         console.log(err)
     });
+
 
 const seedDB = async () => {
     await Campground.deleteMany({});
