@@ -19,11 +19,12 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override"); //we need this to be able to use other html verbs on our forms outside of get and post
 const path = require("path");
 const Campground = require("./models/campground"); // require the campground Model for my database
-const { findByIdAndDelete } = require("./models/campground");
+const { findByIdAndDelete, findById } = require("./models/campground");
 const ejsMate = require("ejs-mate"); // Using ejs-mate for partials main boilerplate layout folder 
 const catchAsync = require("./utils/catchAsync"); // import our catchAsync function
 const ExpressError = require("./utils/ExpressError");//import express Error class
-const { campgroundSchema } = require("./schemas.js")
+const { campgroundSchema, reviewSchema } = require("./schemas.js") //get the validator from Joi from the schema.js file
+const Review = require("./models/review");
 // catchAsync() function should wrap our async functions to catch errors
 
 /* HOW TO USE INCLUDES WITH EJS =
@@ -43,6 +44,17 @@ app.use(methodOverride("_method"));//Tell express to use method override
 const validateCampground = (req, res, next) => {
 
     const { error } = campgroundSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(",");
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+};
+
+//Validate Review middleware using Joi
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(",");
         throw new ExpressError(msg, 400);
@@ -102,7 +114,7 @@ app.post("/campgrounds", validateCampground, catchAsync(async (req, res, next) =
 //Show route
 app.get("/campgrounds/:id", catchAsync(async (req, res) => {
     const { id } = req.params;
-    const camp = await Campground.findById(id);
+    const camp = await Campground.findById(id).populate("reviews"); //populate to get data from the reference ids
     res.locals.title = camp.title;
     res.render("campgrounds/show", { camp });
 }));
@@ -133,6 +145,30 @@ app.delete("/campgrounds/:id", catchAsync(async (req, res, next) => {
     res.redirect("/campgrounds");
 
 }))
+
+
+//Reviews routes//////////////////////////////////////////////////////////////////////////////
+
+//Create a review and add it to campground
+app.post("/campgrounds/:id/reviews", validateReview, catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const camp = await Campground.findById(id);
+    const review = new Review(req.body.review);
+    camp.reviews.push(review);
+    await review.save();
+    await camp.save();
+    res.redirect(`/campgrounds/${id}`);
+}));
+
+app.delete("/campgrounds/:id/reviews/:reviewId", catchAsync(async (req, res, next) => {
+    const { id, reviewId } = req.params;
+    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/campgrounds/${id}`)
+}));
+
+
+///////////////////// 404 and error routes
 
 //404
 app.all("*", (req, res, next) => {

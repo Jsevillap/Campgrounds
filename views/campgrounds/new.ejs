@@ -19,8 +19,11 @@
 
             <div class="mb-3">
                 <label for="price" class="form-label">Price</label>
-                <input type="number" name="campground[price]" id="price" class="form-control" required>
-                <div class="valid-feedback">Thats reasonable!</div>
+                <div class="input-group"> <span class="input-group-text">$</span>
+                    <input type="number" name="campground[price]" id="price" class="form-control" required>
+                    <div class="valid-feedback">Thats reasonable!</div>
+                </div>
+
             </div>
 
             <div class="mb-3">
@@ -35,7 +38,7 @@
                 <label for="description" class="form-label">Description</label>
                 <textarea name="campground[description]" id="description" cols="30" rows="10" class="form-control"
                     required></textarea>
-                <div class="valid-feedback">Is as if Im there!!</div>
+                <div class="valid-feedback">Its as if Im there!!</div>
             </div>
 
             <div class="mb-3">
