@@ -27,6 +27,8 @@ const ExpressError = require("./utils/ExpressError");//import express Error clas
 const { campgroundSchema, reviewSchema } = require("./schemas.js") //get the validator from Joi from the schema.js file
 const campgrounds = require("./routes/campgrounds"); //campground routes
 const reviews = require("./routes/reviews"); //review routes
+const session = require("express-session");//require express session
+const flash = require("connect-flash"); // flash package for messages
 
 // catchAsync() function should wrap our async functions to catch errors
 
@@ -37,6 +39,28 @@ const reviews = require("./routes/reviews"); //review routes
 
 */
 
+const sessionConfig = {
+    secret: "youneedabettersecretforthefuture", //set secret for the hash should be an enviroment variable
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+};
+
+
+app.use(session(sessionConfig)); // use session for cookies 
+app.use(flash()); // use flash
+
+//flash middleware
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+});
+
 app.engine("ejs", ejsMate); // use ejsMate
 app.use(express.urlencoded({ extended: true })); //parse html form data
 app.use(express.json()); //parse JSON
@@ -45,7 +69,10 @@ app.set("view engine", "ejs"); //Tell express to set ejs as the viewengine
 app.use(methodOverride("_method"));//Tell express to use method override
 app.use("/campgrounds", campgrounds); //tell app to use the campgrounds routes 
 app.use("/campgrounds/:id/reviews", reviews);  //tell app to use the reviews routes 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"))); // path to public directory for static files
+
+
+
 
 
 
