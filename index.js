@@ -27,17 +27,15 @@ const ExpressError = require("./utils/ExpressError");//import express Error clas
 const { campgroundSchema, reviewSchema } = require("./schemas.js") //get the validator from Joi from the schema.js file
 const campgrounds = require("./routes/campgrounds"); //campground routes
 const reviews = require("./routes/reviews"); //review routes
+const users = require("./routes/users"); // users routes
 const session = require("express-session");//require express session
 const flash = require("connect-flash"); // flash package for messages
-
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user");
 // catchAsync() function should wrap our async functions to catch errors
+/* HOW TO USE INCLUDES WITH EJS = <%-include("../partials/element")  %> */
 
-
-/* HOW TO USE INCLUDES WITH EJS =
-
-<%-include("../partials/element")  %>
-
-*/
 
 const sessionConfig = {
     secret: "youneedabettersecretforthefuture", //set secret for the hash should be an enviroment variable
@@ -51,11 +49,19 @@ const sessionConfig = {
 };
 
 
-app.use(session(sessionConfig)); // use session for cookies 
+app.use(session(sessionConfig)); // use session for cookies it has to come before passport.session()
 app.use(flash()); // use flash
+app.use(passport.initialize()); //initialize passport
+app.use(passport.session()); //use persistent login sessions
+passport.use(new LocalStrategy(User.authenticate())); // method of validation using passport local 
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
 
 //flash middleware
 app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     next();
@@ -68,7 +74,8 @@ app.set("views", path.join(__dirname, "views")); //Tell express where my viewe f
 app.set("view engine", "ejs"); //Tell express to set ejs as the viewengine
 app.use(methodOverride("_method"));//Tell express to use method override
 app.use("/campgrounds", campgrounds); //tell app to use the campgrounds routes 
-app.use("/campgrounds/:id/reviews", reviews);  //tell app to use the reviews routes 
+app.use("/campgrounds/:id/reviews", reviews);  //tell app to use the reviews routes
+app.use("/", users);
 app.use(express.static(path.join(__dirname, "public"))); // path to public directory for static files
 
 

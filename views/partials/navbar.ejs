@@ -6,11 +6,33 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
             <div class="navbar-nav">
                 <a class="nav-link" href="/">Home</a>
                 <a class="nav-link" href="/campgrounds">Campgrounds</a>
                 <a class="nav-link" href="/campgrounds/new">Make New Campground</a>
             </div>
+
+            <div class="navbar-nav ms-auto">
+
+                <% if(!currentUser){%>
+
+                    <a class="nav-link" href="/register">Register</a>
+                    <a class="nav-link" href="/login">Login</a>
+
+                    <%} else {%>
+                        <span class="nav-link"> Hello <%=currentUser.username%>
+                        </span>
+
+                        <span class="nav-link">|</span>
+
+                        <a class="nav-link" href="/logout">Logout</a>
+                        <%}%>
+
+
+
+            </div>
+
         </div>
     </div>
 </nav>

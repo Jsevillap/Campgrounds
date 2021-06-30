@@ -4,7 +4,8 @@ const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");//import express Error class
 const Campground = require("../models/campground"); // require the campground Model for my database
 const Review = require("../models/review"); //Review Model
-const { campgroundSchema } = require("../schemas.js") //get the validator from Joi from the schema.js file
+const { campgroundSchema } = require("../schemas.js"); //get the validator from Joi from the schema.js file
+const { isLoggedIn } = require("../middleware");
 
 
 ///Validate middleware using Joi
@@ -29,13 +30,13 @@ router.get("/", async (req, res) => {
 });
 
 //New Route show form to create new camp
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
     res.locals.title = "Create a New Campground";
     res.render("campgrounds/new");
 });
 
 //Create Route 
-router.post("/", validateCampground, catchAsync(async (req, res, next) => {
+router.post("/", isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
 
     const { campground: camp } = req.body;
     const newCamp = new Campground(camp);
@@ -57,7 +58,7 @@ router.get("/:id", catchAsync(async (req, res) => {
 }));
 
 //Edit Route
-router.get("/:id/edit", catchAsync(async (req, res) => {
+router.get("/:id/edit", isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     const camp = await Campground.findById(id);
     if (!camp) {
@@ -69,7 +70,7 @@ router.get("/:id/edit", catchAsync(async (req, res) => {
 }));
 
 //Update Route
-router.put("/:id", validateCampground, catchAsync(async (req, res, next) => {
+router.put("/:id", isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
 
     const { id } = req.params;
     const { campground: camp } = req.body;
@@ -80,7 +81,7 @@ router.put("/:id", validateCampground, catchAsync(async (req, res, next) => {
 }));
 
 //Delete Route
-router.delete("/:id", catchAsync(async (req, res, next) => {
+router.delete("/:id", isLoggedIn, catchAsync(async (req, res, next) => {
 
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
