@@ -24,9 +24,13 @@ const CampgroundSchema = new Schema({
         required: true
     },
     reviews: [{
+        type: Schema.Types.ObjectId, //this is a mongoose method that references an id to the review model 
+        ref: "Review" //reference
+    }],
+    author: {
         type: Schema.Types.ObjectId,
-        ref: "Review"
-    }]
+        ref: "User"
+    }
 });
 
 
