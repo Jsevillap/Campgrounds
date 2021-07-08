@@ -3,6 +3,21 @@ const mongoose = require("mongoose");
 const Review = require("./review");
 const Schema = mongoose.Schema;
 
+const ImageSchema = new Schema(
+    {
+        url: String,
+        filename: String
+    }
+);
+
+ImageSchema.virtual("thumbnail").get(function(){
+   return this.url.replace("upload/", "upload/w_100/")
+});
+
+ImageSchema.virtual("mainPhoto").get(function(){
+    return this.url.replace("upload/", "upload/c_fill,h_300,w_500/")
+});
+
 const CampgroundSchema = new Schema({
     title: {
         type: String,
@@ -19,10 +34,7 @@ const CampgroundSchema = new Schema({
     description: {
         type: String
     },
-    image: {
-        type: String,
-        required: true
-    },
+    images: [ImageSchema],
     reviews: [{
         type: Schema.Types.ObjectId, //this is a mongoose method that references an id to the review model 
         ref: "Review" //reference

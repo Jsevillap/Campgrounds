@@ -6,10 +6,14 @@ const Campground = require("../models/campground"); // require the campground Mo
 const { isLoggedIn, isOwner, validateCampground } = require("../middleware");
 const { findById } = require("../models/review");
 const campgrounds = require("../controllers/campgrounds");
+const multer = require("multer"); // Multer package to parse enctype multipart/form-data
+const { storage } = require("../cloudinary"); // require storage dara from our cloud
+const upload = multer({ storage }); //tell multer to use the storage 
 
 router.route("/")
     .get(catchAsync(campgrounds.index)) //index route
-    .post(isLoggedIn, validateCampground, catchAsync(campgrounds.createCamp)); //Create Route 
+    .post(isLoggedIn, upload.array("image"), validateCampground, catchAsync(campgrounds.createCamp)); //Create Route 
+
 
 
 router.route("/new")
@@ -18,7 +22,7 @@ router.route("/new")
 
 router.route("/:id")
     .get(catchAsync(campgrounds.showCamp)) //Show route
-    .put(isLoggedIn, isOwner, validateCampground, catchAsync(campgrounds.editCamp)) //edit camp route
+    .put(isLoggedIn, isOwner, upload.array("image"), validateCampground, catchAsync(campgrounds.editCamp)) //edit camp route
     .delete(isLoggedIn, isOwner, catchAsync(campgrounds.deleteCamp)); //delete camp route
 
 router.route("/:id/edit")

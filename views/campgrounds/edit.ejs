@@ -7,7 +7,8 @@
     </h1>
     <section class="col-6 offset-3 mt-4">
 
-        <form action="/campgrounds/<%=camp._id%>?_method=PUT" method="POST" class="needs-validation" novalidate>
+        <form action="/campgrounds/<%=camp._id%>?_method=PUT" method="POST" class="needs-validation" novalidate
+            enctype="multipart/form-data">
 
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
@@ -33,11 +34,20 @@
 
 
             </div>
+            <div class="mb-3">
+                <label for="image" class="formFileMultiple">Add more images</label>
+                <input type="file" name="image" id="image" multiple class="form-control">
+            </div>
 
             <div class="mb-3">
-                <label for="image" class="form-label">Image URL</label>
-                <input type="text" name="campground[image]" placeholder="example: https://image.com/image" id="image"
-                    class="form-control" value="<%=camp.image%>" required>
+                <% camp.images.forEach((img, i)=>{%>
+                    <img src="<%=img.thumbnail%>" alt="" class="img-thumbnail">
+                    <div class="form-check-inline">
+                        <input type="checkbox" name="deleteImages[]" id="img-<%=i%>" value="<%=img.filename%>">
+                    </div>
+                    <label for="img-<%=i%>" class="form-label">Delete</label>
+
+                    <% }) %>
             </div>
 
             <div class="mb-3">
@@ -46,6 +56,7 @@
                     required><%=camp.description%> </textarea>
             </div>
 
+            
             <div class="mb-3">
                 <button class="btn btn-primary" type="submit">Edit Camp</button>
             </div>

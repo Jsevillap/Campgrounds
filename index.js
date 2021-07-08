@@ -11,7 +11,13 @@ Update   /campgrounds/:id         PATCH   Updates specific campground
 Destroy  /campgrounds/:id         DELETE  Deletes Specific campground
 
 
+
 */
+
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
+
 
 const express = require("express");
 const app = express();
@@ -30,9 +36,12 @@ const reviews = require("./routes/reviews"); //review routes
 const users = require("./routes/users"); // users routes
 const session = require("express-session");//require express session
 const flash = require("connect-flash"); // flash package for messages
-const passport = require("passport");
+const passport = require("passport");//Auth package
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
+const multer = require("multer"); // Multer package to parse enctype multipart/form-data
+const upload = multer({ dest: "uploads/" });
+
 // catchAsync() function should wrap our async functions to catch errors
 /* HOW TO USE INCLUDES WITH EJS = <%-include("../partials/element")  %> */
 
