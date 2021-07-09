@@ -2,6 +2,9 @@ const campground = require("../models/campground");
 const Campground = require("../models/campground"); // require the campground Model for my database
 const { findById } = require("../models/review");
 const { cloudinary } = require("../cloudinary"); //use cloudinary to delete the image from our cloud
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding"); //geocoding sdk npm package
+const mapboxToken = process.env.MAPBOX_TOKEN;
+const geoCoder = mbxGeocoding({accessToken:mapboxToken});
 
 
 
@@ -19,14 +22,19 @@ module.exports.newCamp = (req, res) => {
 
 module.exports.createCamp = async (req, res, next) => {
 
-
+    const geoData = await geoCoder.forwardGeocode({
+        query:req.body.campground.location,
+        limit:1
+    }).send();
     const { campground: camp } = req.body;
     const newCamp = new Campground(camp);
+    newCamp.geometry = geoData.body.features[0].geometry;
     newCamp.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     newCamp.author = req.user._id;
     await newCamp.save();
+    console.log(newCamp);
     req.flash("success", "Successfully created a new campground");
-    res.redirect(`/campgrounds/${newCamp._id}`);
+    res.redirect(`/campgrounds/${newCamp._id}`); 
 };
 
 
@@ -37,6 +45,7 @@ module.exports.showCamp = async (req, res) => {
         req.flash("error", "Cannot Find Campground");
         return res.redirect("/campgrounds");
     }
+    
     res.locals.title = camp.title;
     res.render("campgrounds/show", { camp });
 };

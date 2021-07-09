@@ -1,11 +1,21 @@
 <% layout("layouts/boilerplate") %>
 
+<script>
+    const mapToken = "<%-process.env.MAPBOX_TOKEN%>";
+    const mapCoordinates = [<%-camp.geometry.coordinates%>];
+</script>
+
     <div class="row d-flex justify-content-center">
-        <div class="col-8">
+        <div class="col-lg-8">
 
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
+                    <% if(!camp.images.length){ %>
 
+                    <div class="carousel-item active" ">
+                            <img src="https://res.cloudinary.com/del5uarrv/image/upload/v1625798567/WeCamp/empty_maqll0.jpg" class="d-block w-100" alt="">
+                        </div>
+                        <%} %> 
                     <% camp.images.forEach((el, i)=>{%>
                         <div class="carousel-item <%= i === 0 ? " active": "" %> ">
                             <img src="<%=el.mainPhoto%>" class="d-block w-100" alt="">
@@ -40,13 +50,14 @@
                     <h3 class="card-title">
                         <%=camp.title%>
                     </h3>
-                    <p class="card-text">
-                        <%= camp.description %>
-                    </p>
                     <p class="text-muted">
                         <i class="bi bi-geo-alt"></i>
                         <%=camp.location%>
                     </p>
+                    <p class="card-text">
+                        <%= camp.description %>
+                    </p>
+                    
                     <p class="card-text mb-3">Price: $<%= camp.price%>/night</p>
                     <p class="card-text mb-3">Author: <%=camp.author.username%>
                     </p>
@@ -66,7 +77,11 @@
         </div>
 
 
-        <div class="col-4 my-5">
+        <div class="col-lg-4 mb-5">
+
+                <div class="mb-3">
+                    <div id="map" style="width:100%; height:300px;"></div>
+                </div>
 
             <% if (currentUser){%>
                 <h3>Leave a Review</h3>
@@ -147,3 +162,5 @@
         </div>
 
     </div>
+
+    <script src="/js/showPageMap.js"></script>

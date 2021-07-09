@@ -15,7 +15,7 @@ ImageSchema.virtual("thumbnail").get(function(){
 });
 
 ImageSchema.virtual("mainPhoto").get(function(){
-    return this.url.replace("upload/", "upload/c_fill,h_300,w_500/")
+    return this.url.replace("upload/", "upload/c_fit,h_600,w_900/")
 });
 
 const CampgroundSchema = new Schema({
@@ -42,6 +42,17 @@ const CampgroundSchema = new Schema({
     author: {
         type: Schema.Types.ObjectId,
         ref: "User"
+    },
+    geometry:{
+        type:{
+            type: String,
+            enum:["Point"],
+            required:true
+        },
+        coordinates:{
+            type:[Number],
+            required:true
+        }
     }
 });
 

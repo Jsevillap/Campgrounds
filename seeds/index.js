@@ -37,7 +37,8 @@ const seedDB = async () => {
                     url: 'https://res.cloudinary.com/del5uarrv/image/upload/v1625714931/WeCamp/pcggf0cbfhnijf9a2dnq.jpg',
                     filename: 'WeCamp/pcggf0cbfhnijf9a2dnq'
                 }
-            ]
+            ],
+            geometry:{ coordinates: [ 2.7803505, 48.870580000000004 ], type: 'Point' }
         })
         await camp.save();
     }

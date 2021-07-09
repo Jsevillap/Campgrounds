@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Jsevillap/Campgrounds#readme",
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.13.0",
     "bootstrap-icons": "^1.5.0",
     "cloudinary": "^1.26.2",
     "connect-flash": "^0.1.1",
