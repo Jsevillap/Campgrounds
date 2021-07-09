@@ -1,29 +1,32 @@
 <% layout("layouts/boilerplate") %>
     <!--include the ejs-mate partial layout using the keyword layout instead of includes-->
-
+    <div id="map" style="width: 100%; height: 350px;" class="container-fluid"></div>
     <h1 class="mb-4">WeCamp - Campgrounds</h1>
+
+
     <% for(let camp of camps){%>
 
         <div class="card mb-3">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img src="<%=camp.images.length ? camp.images[0].url : 'https://res.cloudinary.com/del5uarrv/image/upload/v1625798567/WeCamp/empty_maqll0.jpg' %>" class="img-fluid">
+                    <img src="<%=camp.images.length ? camp.images[0].url : `${defaultImg}` %>" class="img-fluid">
                 </div>
                 <div class="col-md-8 d-flex">
                     <div class="card-body">
                         <h5 class="card-title">
                             <%= camp.title %>
                         </h5>
+                        <p class="card-text"><small class="text-muted">
+                            <i class="bi bi-geo-alt"></i>
+                            <%= camp.location %>
+                        </small></p>
                         <p class="card-text">
                             <%= camp.description %>
                         </p>
                         <h6 class="card-text">
                             $<%= camp.price %> / Per Night
                         </h6>
-                        <p class="card-text"><small class="text-muted">
-                                <i class="bi bi-geo-alt"></i>
-                                <%= camp.location %>
-                            </small></p>
+                       
                         <a href="/campgrounds/<%=camp._id%>" class="btn btn-primary">Check Camp</a>
                     </div>
                 </div>
@@ -32,3 +35,10 @@
 
 
         <% } %>
+            <script>
+                const mapToken = "<%-process.env.MAPBOX_TOKEN%>";
+                const campsData = {features: <%-JSON.stringify(camps) %>};
+                console.log(campsData)
+              
+            </script>
+            <script src="/js/clusterMap.js"></script>

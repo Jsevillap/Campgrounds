@@ -71,6 +71,7 @@ passport.deserializeUser(User.deserializeUser());
 //flash middleware
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;
+    res.locals.defaultImg = "https://res.cloudinary.com/del5uarrv/image/upload/v1625802276/WeCamp/empty2_nf1ehf.jpg";
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     next();

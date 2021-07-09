@@ -38,7 +38,7 @@ const seedDB = async () => {
                     filename: 'WeCamp/pcggf0cbfhnijf9a2dnq'
                 }
             ],
-            geometry:{ coordinates: [ 2.7803505, 48.870580000000004 ], type: 'Point' }
+            geometry: { coordinates: [cities[randomNum].longitude, cities[randomNum].latitude], type: 'Point' }
         })
         await camp.save();
     }

@@ -10,9 +10,11 @@ const ImageSchema = new Schema(
     }
 );
 
+const opts = {toJSON:{virtuals:true}};
+
 ImageSchema.virtual("thumbnail").get(function(){
    return this.url.replace("upload/", "upload/w_100/")
-});
+}); //creata a mongoose virtual that is basically an extra property on our main object data
 
 ImageSchema.virtual("mainPhoto").get(function(){
     return this.url.replace("upload/", "upload/c_fit,h_600,w_900/")
@@ -54,8 +56,14 @@ const CampgroundSchema = new Schema({
             required:true
         }
     }
-});
+}, opts);
 
+
+CampgroundSchema.virtual("properties.popUpMarkup").get(function(){
+    return `<strong><a href="/campgrounds/${this._id}">${this.title}</a></strong> 
+    <p> ${this.description.substring(0, 30)}...</p>`
+ });
+ 
 
 //middleware
 

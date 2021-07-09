@@ -10,12 +10,15 @@
 
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <% if(!camp.images.length){ %>
+                    <% if(!camp.images.length) {%> 
 
-                    <div class="carousel-item active" ">
-                            <img src="https://res.cloudinary.com/del5uarrv/image/upload/v1625798567/WeCamp/empty_maqll0.jpg" class="d-block w-100" alt="">
+                        <div class="carousel-item active"  >
+                            <img src="<%=defaultImg%>" class="d-block w-100" alt="">
                         </div>
-                        <%} %> 
+
+                        <% }%> 
+
+
                     <% camp.images.forEach((el, i)=>{%>
                         <div class="carousel-item <%= i === 0 ? " active": "" %> ">
                             <img src="<%=el.mainPhoto%>" class="d-block w-100" alt="">
