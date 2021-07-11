@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background:#1c9371;">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">WeCamp</a>
+        <a class="navbar-brand" href="/"><img src="/img/wecampWhite.png" alt="" width="130px"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -21,10 +21,10 @@
                     <a class="nav-link" href="/login">Login</a>
 
                     <%} else {%>
-                        <span class="nav-link"> Hello <%=currentUser.username%>
+                        <span class="nav-link"> Welcome | <strong class="text-capitalize"><%=currentUser.username%></strong>
                         </span>
 
-                        <span class="nav-link">|</span>
+                        
 
                         <a class="nav-link" href="/logout">Logout</a>
                         <%}%>

@@ -1,0 +1,71 @@
+html {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100%;
+    margin: 0;
+}
+
+.home {
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    background: url("/img/campBG.svg");
+    background-size: cover;
+    background-position: center;
+    animation: moveBG 20s infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: transform 1s ease-in-out;
+    margin: 0;
+}
+
+
+
+.welcome {
+    color: white;
+    font-size: clamp(1em, 1.5em, 2em);
+    padding: 0;
+    margin: 0;
+    font-weight: 100;
+}
+
+.logoWe {
+    min-width: 25%;
+    max-width: 80%;
+    margin: 0 0 1em 0;
+}
+
+.btnwe {
+    background: #1c9371;
+    font-size: clamp(1em, 1vw, 1.4em);
+    padding: clamp(1.2em, 1vw, 1.4em) clamp(1.4em, 1vw, 1.4em);
+    color: white;
+    border: none;
+    border-radius: 60px;
+    transition: background 250ms ease-in-out;
+}
+
+.btnwe:hover {
+    background: #237258;
+    cursor: pointer;
+}
+
+.attribution {
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    right: 0;
+    color: white;
+    font-size: 0.7em;
+}
+
+.nav-link {
+    color: #125f49;
+    font-weight: bold;
+}

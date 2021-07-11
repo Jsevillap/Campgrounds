@@ -4,9 +4,11 @@
 
             <%= message %>
         </h1>
-        <p>
-            <%=err.stack%>
-        </p>
 
+        <% if (process.env.NODE_ENV !=="production" ) {%>
+            <p>
+                <%=err.stack%>
+            </p>
+            <% } %>
 
     </section>

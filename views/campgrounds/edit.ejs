@@ -3,9 +3,10 @@
 
 <% layout("layouts/boilerplate") %>
 
+<div class="container">
     <h1 class="text-center">Edit <%=camp.title%>
     </h1>
-    <section class="col-6 offset-3 mt-4">
+    <section class="col-md-6 offset-md-3 mt-4">
 
         <form action="/campgrounds/<%=camp._id%>?_method=PUT" method="POST" class="needs-validation" novalidate
             enctype="multipart/form-data">
@@ -39,14 +40,17 @@
                 <input type="file" name="image" id="image" multiple class="form-control">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3 row">
+                
                 <% camp.images.forEach((img, i)=>{%>
+                    <div class="col-md-4 col-sm-4 ">
                     <img src="<%=img.thumbnail%>" alt="" class="img-thumbnail">
-                    <div class="form-check-inline">
+                    <div class="form-check m-0">
                         <input type="checkbox" name="deleteImages[]" id="img-<%=i%>" value="<%=img.filename%>">
+                        <label for="img-<%=i%>" class="form-label">Delete</label>
                     </div>
-                    <label for="img-<%=i%>" class="form-label">Delete</label>
-
+                    
+                </div>
                     <% }) %>
             </div>
 
@@ -57,14 +61,16 @@
             </div>
 
             
-            <div class="mb-3">
-                <button class="btn btn-primary" type="submit">Edit Camp</button>
+            <div class="mb-3 d-grid gap-2">
+                <button class="btn btn-wecamp" type="submit">Edit Camp</button>
             </div>
 
         </form>
         <div class="mb-3">
-            <a href="/campgrounds">Back to campgrounds</a> &nbsp;
-            <a href="/campgrounds/<%=camp._id%>"> back to <%=camp.title%> </a>
+            <a href="/campgrounds"><i class="bi bi-arrow-left-circle"></i> Back to campgrounds</a> &nbsp;
+            <a href="/campgrounds/<%=camp._id%>"><i class="bi bi-arrow-left-circle"></i> Back to <%=camp.title%> </a>
         </div>
 
     </section>
+
+</div>

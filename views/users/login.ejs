@@ -1,7 +1,11 @@
 <% layout("layouts/boilerplate") %>
-    <h1>Login</h1>
+<div class="container">
 
-    <form action="/login" method="POST" class="needs-validation" novalidate>
+    <section class="col-md-6 offset-md-3 mt-4 d-flex flex-column justify-content-center align-items-center p-3 shadow align-middle rounded-3"> 
+    <img src="/img/WecampColor.png" alt="" width="90%" class="img-fluid" >
+    <h1 class="text-center">Login</h1>
+
+    <form action="/login" method="POST" class="needs-validation w-100" novalidate>
 
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
@@ -15,9 +19,12 @@
             <div class="valid-feedback">valid password</div>
         </div>
 
-        <div class="mb-3">
-            <button class="btn btn-primary" type="submit">Login</button>
+        <div class="mb-3 d-grid gap-2">
+            <button class="btn btn-wecamp" type="submit">Login</button>
         </div>
 
 
     </form>
+
+</section>
+</div>

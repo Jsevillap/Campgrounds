@@ -14,6 +14,7 @@ Destroy  /campgrounds/:id         DELETE  Deletes Specific campground
 
 */
 
+//*****check if we are in production or development and only uses the .env file for development purposes */
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
@@ -41,17 +42,50 @@ const LocalStrategy = require("passport-local");
 const User = require("./models/user");
 const multer = require("multer"); // Multer package to parse enctype multipart/form-data
 const upload = multer({ dest: "uploads/" });
+const mongoSanitize = require("express-mongo-sanitize");//package to sanitize mongo queries
+const helmet = require("helmet");//package to help with http header security
+const databaseConnection = process.env.DATABASE_URL; //|| "mongodb://localhost:27017/wecamp";
+const MongoStore = require("connect-mongo"); //Package to store session in mongo
 
 // catchAsync() function should wrap our async functions to catch errors
 /* HOW TO USE INCLUDES WITH EJS = <%-include("../partials/element")  %> */
 
 
+//---------------------------------------//
+mongoose.set('useFindAndModify', false); //Tell mongoose to not use that function cause is deprecated
+
+//Connect mongoose to mongo database
+mongoose.connect("mongodb://localhost:27017/wecamp", { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+    //handle error    
+    .then(() => {
+        console.log("Mongo connection made")
+    })
+    .catch(err => {
+        console.log("There is an error on mongo")
+        console.log(err)
+    });
+
+
+
+const store = new MongoStore({
+    mongoUrl: "mongodb://localhost:27017/wecamp",
+    secret: "youneedabettersecretforthefuture",
+    touchAfter: 24 * 60 * 60
+});
+
+store.on("error", function (e) {
+    console.log("Session Store Error", e);
+});
+
 const sessionConfig = {
+    store,
+    name: "weCampSession",
     secret: "youneedabettersecretforthefuture", //set secret for the hash should be an enviroment variable
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        //secure:true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
@@ -65,7 +99,8 @@ app.use(passport.session()); //use persistent login sessions
 passport.use(new LocalStrategy(User.authenticate())); // method of validation using passport local 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
+app.use(mongoSanitize()); //Use the mongo sanitizer across the app ****order of app.use matters***
+app.use(helmet({ contentSecurityPolicy: false })); //Use helmet package to help with http header security
 
 
 //flash middleware
@@ -93,19 +128,6 @@ app.use(express.static(path.join(__dirname, "public"))); // path to public direc
 
 
 
-//---------------------------------------//
-mongoose.set('useFindAndModify', false); //Tell mongoose to not use that function cause is deprecated
-
-//Connect mongoose to mongo database
-mongoose.connect("mongodb://localhost:27017/wecamp", { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
-    //handle error    
-    .then(() => {
-        console.log("Mongo connection made")
-    })
-    .catch(err => {
-        console.log("There is an error on mongo")
-        console.log(err)
-    });
 
 
 //Start Server    
@@ -120,7 +142,7 @@ app.listen(3000, () => {
 //Home route
 app.get("/", async (req, res) => {
     const camps = await Campground.find({});
-    res.render("home", { camps });
+    res.render("campgrounds/home", { camps });
 });
 
 //Campground routes ////
@@ -136,7 +158,9 @@ app.get("/", async (req, res) => {
 
 //404
 app.all("*", (req, res, next) => {
-    next(new ExpressError("404 Page not found", 404));
+    res.render("404");
+    /*/next(new ExpressError("404 Page not found", 404));*/
+    next();
 })
 
 //error handler

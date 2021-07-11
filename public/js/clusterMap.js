@@ -7,7 +7,7 @@ const map = new mapboxgl.Map({
 	zoom: 3
 });
 
-
+map.addControl(new mapboxgl.NavigationControl());
 
 map.on('load', function () {
 	// Add a new source from our GeoJSON data and
@@ -46,11 +46,11 @@ map.on('load', function () {
 			'circle-radius': [
 				'step',
 				['get', 'point_count'],
-				20,
+				25,
 				100,
-				30,
+				35,
 				750,
-				40
+				45
 			]
 			
 		}
@@ -77,8 +77,8 @@ map.on('load', function () {
 		source: 'camps',
 		filter: ['!', ['has', 'point_count']],
 		paint: {
-			'circle-color': '#000',
-			'circle-radius': 8,
+			'circle-color': '#1c9371',
+			'circle-radius': 12,
 			'circle-stroke-width': 2,
 			'circle-stroke-color': '#fff'
 		}
@@ -132,5 +132,14 @@ map.on('load', function () {
 	map.on('mouseleave', 'clusters', function () {
 		map.getCanvas().style.cursor = '';
 	});
+
+	map.on('mouseenter', 'unclustered-point', function () {
+		map.getCanvas().style.cursor = 'pointer';
+	});
+	map.on('mouseleave', 'unclustered-point', function () {
+		map.getCanvas().style.cursor = '';
+	});
+
+
 });
 

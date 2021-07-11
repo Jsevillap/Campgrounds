@@ -1,0 +1,117 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+}
+html{
+    min-height: 100%;
+    height:100%;
+}
+
+body{
+    min-height: 100%;
+    height:100%;
+}
+
+main{
+    height:100%;
+    width:100%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+}
+h1{
+    font-size: clamp(2.3em, 7vw, 3em);
+    text-align: center;
+}
+p{
+    width: 50%;
+    text-align: center;
+}
+.absolute{
+    position:absolute;
+}
+.forest{
+    bottom: 0;
+    z-index: -1;
+    width: clamp(80rem, 140vw, 170%);
+    animation-name:popin;
+    animation-duration: 0.7s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes  popin{
+    0%{
+        transform: translateY(100%);
+    }
+    100%{
+        transform: translateY(50%);
+    }
+}
+.logo{
+    width: clamp(23rem, 43vw, 70vw);
+    margin-bottom:-4%;
+    margin-top: -5%;
+}
+
+button{
+    background: #1c9371;
+    border: none;
+    padding: 2em 4vw;
+    border-radius: 90px;
+    margin-top: 1.5em;
+    color:white;
+    transition: background 200ms ease-in;
+}
+
+button:hover{
+    background:#135c47;
+    cursor: pointer;
+}
+
+.cloud1{
+    width: 45rem;
+    top: 25px;
+    right:0;
+    animation:moveside 35s infinite linear;
+}
+
+@keyframes moveside {
+    0%{
+        right:0;
+    }
+    50%{
+        right:25%;
+    }
+
+    100%{
+        right:0;
+    }
+}
+
+.cloud2{
+    width: 35rem;
+    top: 35px;
+    left: 0;
+    animation:moveOtherside 35s infinite linear;
+}
+
+@keyframes moveOtherside {
+    0%{
+        left:0;
+    }
+    50%{
+        left:25%;
+    }
+
+    100%{
+        left:0;
+    }
+}

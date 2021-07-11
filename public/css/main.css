@@ -1,0 +1,27 @@
+:root{
+    --main-green: #1c9371;
+    --main-green-dark:#17755b;
+}
+.btn-wecamp {
+    background: var(--main-green);
+    border-color: var(--main-green);
+    color: white;
+}
+
+.btn-wecamp:hover {
+    color: white;
+    background: var(--main-green-dark);
+}
+
+a {
+    color: var(--main-green);
+    transition: color 150ms ease-in;
+}
+
+a:hover {
+    color: var(--main-green-dark);
+}
+
+.color-main{
+    color:var(--main-green);
+}
