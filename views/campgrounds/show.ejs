@@ -70,11 +70,11 @@
                         </p>
 
                         <% if (currentUser && camp.author.equals(currentUser)) {%>
-                            <a class="btn btn-primary" href="/campgrounds/<%=camp._id%>/edit">Edit</a>
+                            <a class="btn btn-wecamp btn-sm" href="/campgrounds/<%=camp._id%>/edit"><i class="bi bi-pencil"></i> Edit Campground</a>
 
                             <form action="/campgrounds/<%=camp._id%>?_method=DELETE" method="POST"
                                 class="d-inline-block">
-                                <button class="btn btn-danger mt-4 mb-4" type="submit">Delete</button>
+                                <button class="btn btn-danger  btn-sm mt-4 mb-4" type="submit"><i class="bi bi-trash"></i> Delete Campground</button>
                             </form>
                             <% } %>
 
@@ -126,7 +126,7 @@
                                 class="form-control" required></textarea>
                             <div class="valid-feedback">You paint quite the picture!! great review</div>
                         </div>
-                        <button type="submit" class="btn btn-success">Add Review</button>
+                        <button type="submit" class="btn btn-sm btn-wecamp"><i class="bi bi-star"></i> Add Review</button>
 
                     </form>
                     <% } %>
@@ -157,7 +157,7 @@
                                                     <form
                                                         action="/campgrounds/<%=camp._id%>/reviews/<%=review._id%>?_method=DELETE"
                                                         method="POST">
-                                                        <button type="submit" class="btn btn-sm btn-danger">delete
+                                                        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Delete
                                                             review</button>
                                                     </form>
 
