@@ -44,8 +44,10 @@ const multer = require("multer"); // Multer package to parse enctype multipart/f
 const upload = multer({ dest: "uploads/" });
 const mongoSanitize = require("express-mongo-sanitize");//package to sanitize mongo queries
 const helmet = require("helmet");//package to help with http header security
-const databaseConnection = process.env.DATABASE_URL; //|| "mongodb://localhost:27017/wecamp";
+const databaseConnection = process.env.DATABASE_URL || "mongodb://localhost:27017/wecamp";
 const MongoStore = require("connect-mongo"); //Package to store session in mongo
+const secret = process.env.SECRET || "youneedabettersecretforthefuture";
+const port = process.env.PORT || 3000;
 
 // catchAsync() function should wrap our async functions to catch errors
 /* HOW TO USE INCLUDES WITH EJS = <%-include("../partials/element")  %> */
@@ -55,7 +57,7 @@ const MongoStore = require("connect-mongo"); //Package to store session in mongo
 mongoose.set('useFindAndModify', false); //Tell mongoose to not use that function cause is deprecated
 
 //Connect mongoose to mongo database
-mongoose.connect("mongodb://localhost:27017/wecamp", { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(databaseConnection, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
     //handle error    
     .then(() => {
         console.log("Mongo connection made")
@@ -68,8 +70,8 @@ mongoose.connect("mongodb://localhost:27017/wecamp", { useNewUrlParser: true, us
 
 
 const store = new MongoStore({
-    mongoUrl: "mongodb://localhost:27017/wecamp",
-    secret: "youneedabettersecretforthefuture",
+    mongoUrl: databaseConnection,
+    secret,
     touchAfter: 24 * 60 * 60
 });
 
@@ -80,7 +82,7 @@ store.on("error", function (e) {
 const sessionConfig = {
     store,
     name: "weCampSession",
-    secret: "youneedabettersecretforthefuture", //set secret for the hash should be an enviroment variable
+    secret, //set secret for the hash should be an enviroment variable
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -131,8 +133,8 @@ app.use(express.static(path.join(__dirname, "public"))); // path to public direc
 
 
 //Start Server    
-app.listen(3000, () => {
-    console.log("Server started on port 3000")
+app.listen(port, () => {
+    console.log("Server started on port: " + port)
 });
 
 
