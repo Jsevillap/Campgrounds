@@ -2,6 +2,7 @@
 
 const mongoose = require("mongoose");
 const Campground = require("../models/campground");
+const Review = require("../models/review");
 const cities = require("./cities");
 const { descriptors, places } = require("./seedHelpers");
 
@@ -19,6 +20,7 @@ mongoose.connect("mongodb://localhost:27017/wecamp", { useNewUrlParser: true, us
 
 const seedDB = async () => {
     await Campground.deleteMany({});
+    await Review.deleteMany({});
 
     for (let i = 0; i < 50; i++) {
         const randomNum = Math.floor(Math.random() * 1000);
@@ -27,7 +29,7 @@ const seedDB = async () => {
             location: `${cities[randomNum].city}, ${cities[randomNum].state}`,
             title: ` ${descriptors[Math.floor(Math.random() * descriptors.length)]} ${places[Math.floor(Math.random() * places.length)]} `,
             price: Math.floor(Math.random() * 85),
-            description: `The Best campsite in ${cities[randomNum].city}, ${cities[randomNum].state}.`,
+            description: `The Best campsite in ${cities[randomNum].city}, ${cities[randomNum].state} come visit for an amazing experience!.`,
             images: [
                 {
                     url: 'https://res.cloudinary.com/del5uarrv/image/upload/v1625714930/WeCamp/rnxi8tbweugljp7ij0re.jpg',
@@ -38,7 +40,8 @@ const seedDB = async () => {
                     filename: 'WeCamp/pcggf0cbfhnijf9a2dnq'
                 }
             ],
-            geometry: { coordinates: [cities[randomNum].longitude, cities[randomNum].latitude], type: 'Point' }
+            geometry: { coordinates: [cities[randomNum].longitude, cities[randomNum].latitude], type: 'Point' },
+            date: new Date()
         })
         await camp.save();
     }

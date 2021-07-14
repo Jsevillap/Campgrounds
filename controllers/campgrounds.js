@@ -4,7 +4,9 @@ const { findById } = require("../models/review");
 const { cloudinary } = require("../cloudinary"); //use cloudinary to delete the image from our cloud
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding"); //geocoding sdk npm package
 const mapboxToken = process.env.MAPBOX_TOKEN;
-const geoCoder = mbxGeocoding({accessToken:mapboxToken});
+const geoCoder = mbxGeocoding({ accessToken: mapboxToken });
+const moment = require("moment");
+const review = require("../models/review");
 
 
 
@@ -23,17 +25,18 @@ module.exports.newCamp = (req, res) => {
 module.exports.createCamp = async (req, res, next) => {
 
     const geoData = await geoCoder.forwardGeocode({
-        query:req.body.campground.location,
-        limit:1
+        query: req.body.campground.location,
+        limit: 1
     }).send();
     const { campground: camp } = req.body;
     const newCamp = new Campground(camp);
     newCamp.geometry = geoData.body.features[0].geometry;
-    newCamp.images = req.files.map(f => ({ url: f.path, filename: f.filename }));  
+    newCamp.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     newCamp.author = req.user._id;
+    newCamp.date = new Date();
     await newCamp.save();
     req.flash("success", "Successfully created a new campground");
-    res.redirect(`/campgrounds/${newCamp._id}`); 
+    res.redirect(`/campgrounds/${newCamp._id}`);
 };
 
 
@@ -44,6 +47,9 @@ module.exports.showCamp = async (req, res) => {
         req.flash("error", "Cannot Find Campground");
         return res.redirect("/campgrounds");
     }
+   
+    camp.reviews.forEach(el => el.dateFromNow = moment(el.date).fromNow());
+    camp.dateFromNow = moment(camp.date).fromNow();
     
     res.locals.title = camp.title;
     res.render("campgrounds/show", { camp });
@@ -86,6 +92,10 @@ module.exports.editCamp = async (req, res, next) => {
 module.exports.deleteCamp = async (req, res, next) => {
 
     const { id } = req.params;
+    const foundCamp = await Campground.findById(id);
+    for (campImg of foundCamp.images) {
+        await cloudinary.uploader.destroy(campImg.filename);
+    }
     await Campground.findByIdAndDelete(id);
     req.flash("success", "Deleted campground");
     res.redirect("/campgrounds");

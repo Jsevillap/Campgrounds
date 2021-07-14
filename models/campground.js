@@ -55,6 +55,10 @@ const CampgroundSchema = new Schema({
             type:[Number],
             required:true
         }
+    },
+    date: {
+        type:Date,
+        required:true
     }
 }, opts);
 

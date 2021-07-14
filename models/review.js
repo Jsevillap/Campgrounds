@@ -13,6 +13,10 @@ const reviewSchema = new Schema({
     reviewer: {
         type: Schema.Types.ObjectId,
         ref: "User"
+    },
+    date: {
+        type: Date,
+        required: true
     }
 })
 
